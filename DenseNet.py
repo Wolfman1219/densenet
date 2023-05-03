@@ -1,12 +1,11 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models, Input
-from tensorflow.keras.datasets import cifar10
-from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.utils import plot_model
-import pydot
 import tensorflow_datasets as tfds
-# DenseNet
+
+
+# DenseNet qurish
 def densenet(input_shape, num_classes, growth_rate=32, depth=40, compression_rate=0.5):
     n_blocks = (depth - 4) // 6
     n_channels = growth_rate * 2
@@ -43,7 +42,7 @@ def densenet(input_shape, num_classes, growth_rate=32, depth=40, compression_rat
 
     return models.Model(inputs, outputs)
 
-# Yaratish va kompilyatsiya
+# Datasetni yuklash
 input_shape = (32, 32, 3)
 num_classes = 12
 batch_size = 128
@@ -57,7 +56,8 @@ def preprocess_data(example):
 dataset = tfds.load("stanford_online_products", split = "train")
 
 ds_test = tfds.load("stanford_online_products", split = "test")
-# Preprocess the data
+
+# Datasetni tozalash
 
 
 dataset = dataset.map(preprocess_data)
@@ -69,7 +69,7 @@ ds_test = ds_test.batch(batch_size).prefetch(tf.data.experimental.AUTOTUNE)
 model = densenet(input_shape, num_classes)
 model.compile(optimizer=Adam(), loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-# Train
+# Train jarayoni
 batch_size = 128
 epochs = 1
 plot_model(model, to_file='densenet.png', show_shapes=True)
